@@ -9,13 +9,13 @@ st.set_page_config(page_title="World Cup 2026 Predictor", page_icon="⚽", layou
 @st.cache_resource
 def load():
     return (joblib.load("wc_model.pkl"), joblib.load("team_stats.pkl"),
-            pd.read_pickle("fixtures.pkl"), joblib.load("goals_model.pkl"), joblib.load("groups.pkl"))
+            pd.read_pickle("fixtures.pkl"), joblib.load("goals_coef.pkl"), joblib.load("groups.pkl"))
 
 model, stats, fixtures, goals_model, groups = load()
 FEATS = ["he","ae","elo_diff","h_wr","h_gd","a_wr","a_gd","neutral_i"]
 teams = sorted(stats.keys())
 elo = {t: stats[t]["elo"] for t in stats}
-B0, BE = goals_model.intercept_, goals_model.coef_[0]
+B0, BE = goals_model["b0"], goals_model["be"]
 
 def predict(home, away, neutral=True):
     H, A = stats[home], stats[away]
